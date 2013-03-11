@@ -4,9 +4,8 @@ This is basically updated wrapper of SwiftMailer which can be used as applicatio
 
 1. Unzip extension contents to protected/extensions/ folder
 2. Set up yii component via config:
+
 ~~~
-[php]
-...
 'mailer' => array(
 	'class' => 'ext.swiftMailer.SwiftMailer',
 	// For SMTP
@@ -18,13 +17,11 @@ This is basically updated wrapper of SwiftMailer which can be used as applicatio
 	// For sendmail:
 	'mailer'=>'sendmail',
 ),
-...
 ~~~
 
 ##Usage
 
 ~~~
-[php]
 Yii::app()->mailer->AddAddress($email);
 Yii::app()->mailer->Subject = "Let's do this!";
 Yii::app()->mailer->MsgHTML("<a href='http://site.com'>test</a>");
@@ -33,7 +30,6 @@ Yii::app()->mailer->Send();
 
 Add file:
 ~~~
-[php]
 app()->mailer
     ->AddAddress($email)
     ->MsgHTML('<p>You received an invoice!</p>')
