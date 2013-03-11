@@ -28,6 +28,10 @@ class SwiftMailer extends CComponent
 	 */
 	public $password;
 	/**
+	 * SMTP security
+	 */
+	public $security;
+	/**
 	 * @param string Message Subject
 	 */
 	public $Subject;
@@ -51,9 +55,9 @@ class SwiftMailer extends CComponent
 
 	public function init()
 	{
-		spl_autoload_unregister(array('YiiBase','autoload'));
+		spl_autoload_unregister(array('YiiBase', 'autoload'));
 		require_once(dirname(__FILE__) . '/lib/swift_required.php');
-		spl_autoload_register(array('YiiBase','autoload'));
+		spl_autoload_register(array('YiiBase', 'autoload'));
 	}
 
 	public function AddAddress($address)
@@ -62,6 +66,7 @@ class SwiftMailer extends CComponent
 			$this->_addresses[] = $address;
 		return $this;
 	}
+
 	public function AddFile($address)
 	{
 		if (!in_array($address, $this->_attachments))
@@ -110,7 +115,7 @@ class SwiftMailer extends CComponent
 		}
 
 		if ($this->_attachments) {
-			foreach($this->_attachments as $path)
+			foreach ($this->_attachments as $path)
 				$message->attach(Swift_Attachment::fromPath($path));
 		}
 
@@ -182,9 +187,9 @@ class SwiftMailer extends CComponent
 
 	public $sendmailCommand = '/usr/bin/sendmail -t';
 
-	public function smtpTransport($host = null, $port = null)
+	public function smtpTransport($host = null, $port = null, $security = null)
 	{
-		return Swift_SmtpTransport::newInstance($host, $port);
+		return Swift_SmtpTransport::newInstance($host, $port, $security);
 	}
 
 	public function sendmailTransport($command = null)
@@ -200,7 +205,7 @@ class SwiftMailer extends CComponent
 	protected function loadTransport()
 	{
 		if ($this->mailer == 'smtp') {
-			$transport = self::smtpTransport($this->host, $this->port);
+			$transport = self::smtpTransport($this->host, $this->port, $this->security);
 
 			if ($this->username)
 				$transport->setUsername($this->username);
