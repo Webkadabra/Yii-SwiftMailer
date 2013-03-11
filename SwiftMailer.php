@@ -51,7 +51,9 @@ class SwiftMailer extends CComponent
 
 	public function init()
 	{
+		spl_autoload_unregister(array('YiiBase','autoload'));
 		require_once(dirname(__FILE__) . '/lib/swift_required.php');
+		spl_autoload_register(array('YiiBase','autoload'));
 	}
 
 	public function AddAddress($address)
