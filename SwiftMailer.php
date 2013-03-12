@@ -130,7 +130,7 @@ class SwiftMailer extends CComponent
 		}
 
 		if ($this->_attachments) {
-			foreach ($this->_attachments as $path)
+			foreach($this->_attachments as $path)
 				$message->attach(Swift_Attachment::fromPath($path));
 		}
 
