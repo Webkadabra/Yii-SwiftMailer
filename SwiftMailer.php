@@ -32,13 +32,9 @@ class SwiftMailer extends CComponent
 	 */
 	public $security;
 	/**
-	 * @param string Message Subject
+	 * @param mixed Email address messages are going to be sent "from"
 	 */
-	public $Subject;
-	/**
-	 * @param mixed Email addres messages are going to be sent "from"
-	 */
-	public $From;
+	public $from;
 	/**
 	 * @param string HTML Message Body
 	 */
@@ -48,6 +44,7 @@ class SwiftMailer extends CComponent
 	 */
 	public $altBody = null;
 
+	protected $_subject = null;
 	protected $_addresses = array();
 	protected $_attachments = array();
 
@@ -64,6 +61,12 @@ class SwiftMailer extends CComponent
 			$this->_addresses[] = $address;
 		return $this;
 	}
+	public function subject($subject)
+	{
+		$this->_subject = $subject;
+		return $this;
+	}
+	public function addFile($address)
 	{
 		if (!in_array($address, $this->_attachments))
 			$this->_attachments[] = $address;
@@ -82,14 +85,14 @@ class SwiftMailer extends CComponent
 	/**
 	 * Helper function to send emails like this:
 	 * <code>
-	 *        Yii::app()->mailer->AddAddress($email);
-	 *        Yii::app()->mailer->Subject = $newslettersOne['name'];
-	 *         Yii::app()->mailer->MsgHTML($template['content']);
-	 *        Yii::app()->mailer->Send();
+	 *        Yii::app()->mailer->addAddress($email);
+	 *        Yii::app()->mailer->subject($newslettersOne['name']);
+	 *         Yii::app()->mailer->msgHTML($template['content']);
+	 *        Yii::app()->mailer->send();
 	 * </code>
 	 * @return boolean Whether email has been sent or not
 	 */
-	public function Send()
+	public function send()
 	{
 		//Create the Transport
 		$transport = $this->loadTransport();
@@ -98,10 +101,9 @@ class SwiftMailer extends CComponent
 		$mailer = Swift_Mailer::newInstance($transport);
 
 		//Create a message
-		$message = Swift_Message::newInstance($this->Subject)
-			->setFrom($this->From)
+		$message = Swift_Message::newInstance($this->_subject)
+			->setFrom($this->from)
 			->setTo($this->_addresses);
-
 
 		if ($this->body) {
 			$message->addPart($this->body, 'text/html');
