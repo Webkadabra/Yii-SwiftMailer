@@ -28,7 +28,7 @@ class SwiftMailer extends CComponent
 	 */
 	public $password;
 	/**
-	 * SMTP security
+	 * SMTP security (ssl or tls)
 	 */
 	public $security;
 	/**
@@ -43,6 +43,19 @@ class SwiftMailer extends CComponent
 	 * @param string Alternative message body (plain text)
 	 */
 	public $altBody = null;
+	/**
+	 * sendmailCommand
+	 */
+	public $sendmailCommand = '/usr/bin/sendmail -t';
+	public $logMailerActivity = false;
+
+	/**
+	 * logMailerDebug
+	 *
+	 * @description  outputs additional debug info from mailer
+	 * 		only available when logMailerActivity == true
+	 */
+	public $logMailerDebug = false;
 
 	protected $_subject = null;
 	protected $_addresses = array();
@@ -53,7 +66,8 @@ class SwiftMailer extends CComponent
 		if (!class_exists('Swift', false))
         {
         	$this->registerAutoloader();
-        	require_once  dirname(__FILE__). '/lib/dependency_maps/cache_deps.php';
+        	// include the SwiftMailer Dependencies
+        	require_once dirname(__FILE__). '/lib/dependency_maps/cache_deps.php';
         	require_once dirname(__FILE__) . '/lib/dependency_maps/mime_deps.php';
         	require_once dirname(__FILE__) . '/lib/dependency_maps/message_deps.php';
         	require_once dirname(__FILE__) . '/lib/dependency_maps/transport_deps.php';
@@ -104,8 +118,15 @@ class SwiftMailer extends CComponent
 	 * <code>
 	 *        Yii::app()->mailer->addAddress($email);
 	 *        Yii::app()->mailer->subject($newslettersOne['name']);
-	 *         Yii::app()->mailer->msgHTML($template['content']);
+	 *        Yii::app()->mailer->msgHTML($template['content']);
 	 *        Yii::app()->mailer->send();
+	 * </code>
+	 * or
+	 * <code>
+	 *        Yii::app()->mailer->addAddress($email)
+	 *        	->subject($newslettersOne['name'])
+	 *        	->msgHTML($template['content'])
+	 *        	->send();
 	 * </code>
 	 * @return boolean Whether email has been sent or not
 	 */
@@ -198,7 +219,6 @@ class SwiftMailer extends CComponent
 	{
 		return Swift_Image;
 	}
-
 
 	public function smtpTransport($host = null, $port = null, $security = null)
 	{
