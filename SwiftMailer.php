@@ -138,11 +138,10 @@ class SwiftMailer extends CComponent
 		$this->ClearAddresses();
 	}
 
-	public function ClearAddresses()
+	public function clearAddresses()
 	{
 		$this->_addresses = array();
 	}
-
 
 	public function addressesFlat()
 	{
