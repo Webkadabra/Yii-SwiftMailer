@@ -132,11 +132,20 @@ class SwiftMailer extends CComponent
 	 */
 	public function send()
 	{
+	 	$logger = null;
 		//Create the Transport
 		$transport = $this->loadTransport();
 
 		//Create the Mailer using your created Transport
 		$mailer = Swift_Mailer::newInstance($transport);
+
+		if ($this->logMailerActivity && $this->logMailerDebug) {
+
+			$logger = new Swift_Plugins_Loggers_ArrayLogger();
+			// pass false to give plain text output for console in EchoLogger
+			//$logger = new Swift_Plugins_Loggers_EchoLogger(false);
+			$mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+		}
 
 		//Create a message
 		$message = Swift_Message::newInstance($this->_subject)
@@ -156,22 +165,34 @@ class SwiftMailer extends CComponent
 		}
 
 		$result = $mailer->send($message);
-
-		if ($this->logMailerActivity == true) {
+		if ($this->logMailerActivity === true) {
 			if (!$result) {
 				$logMessage = 'Failed to send "' . $this->Subject . '" email to [' . implode(', ', $this->addressesFlat()) . ']'
 					. "\nMessage:\n"
 					. ($this->altBody ? $this->altBody : $this->body);
 				Yii::log($logMessage, 'error', 'appMailer');
-			} else {
-				$logMessage = 'Sent email "' . $this->Subject . '" to [' . implode(', ', $this->addressesFlat()) . ']'
-					. "\nMessage:\n"
-					. ($this->altBody ? $this->altBody : $this->body);
-				Yii::log($logMessage, 'trace', 'appMailer');
+				if ($this->logMailerDebug)
+				{
+					$output = $logger->dump();
+					Yii::log($output, 'error', 'appMailer');
+				}
+				goto COMPLETE;
 			}
+
+			$logMessage = 'Sent email "' . $this->Subject . '" to [' . implode(', ', $this->addressesFlat()) . ']'
+				. "\nMessage:\n"
+				. ($this->altBody ? $this->altBody : $this->body);
+			Yii::log($logMessage, 'info','appMailer');
+			if ($this->logMailerDebug)
+			{
+				$output = $logger->dump();
+				Yii::log($output, 'info', 'appMailer');
+			}
+
 		}
 
-		$this->ClearAddresses();
+	COMPLETE:
+		$this->clearAddresses();
 	}
 
 	public function clearAddresses()
