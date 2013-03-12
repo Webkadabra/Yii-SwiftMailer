@@ -10,7 +10,7 @@ class SwiftMailer extends CComponent
 	/**
 	 * smtp, sendmail or mail
 	 */
-	public $mailer = 'sendmail'; // 
+	public $mailer = 'sendmail'; //
 	/**
 	 * SMTP outgoing mail server host
 	 */
@@ -20,11 +20,11 @@ class SwiftMailer extends CComponent
 	 */
 	public $port = 25;
 	/**
-	 * SMTP Password
+	 * SMTP Relay account username
 	 */
 	public $username;
 	/**
-	 * SMTP email
+	 * SMTP Relay account password
 	 */
 	public $password;
 	/**
@@ -51,8 +51,6 @@ class SwiftMailer extends CComponent
 	protected $_addresses = array();
 	protected $_attachments = array();
 
-	public $logMailerActivity = false;
-
 	public function init()
 	{
 		spl_autoload_unregister(array('YiiBase', 'autoload'));
@@ -66,8 +64,6 @@ class SwiftMailer extends CComponent
 			$this->_addresses[] = $address;
 		return $this;
 	}
-
-	public function AddFile($address)
 	{
 		if (!in_array($address, $this->_attachments))
 			$this->_attachments[] = $address;
@@ -184,7 +180,6 @@ class SwiftMailer extends CComponent
 		return Swift_Image;
 	}
 
-	public $sendmailCommand = '/usr/bin/sendmail -t';
 
 	public function smtpTransport($host = null, $port = null, $security = null)
 	{
@@ -218,6 +213,4 @@ class SwiftMailer extends CComponent
 
 		return $transport;
 	}
-
-
 }
