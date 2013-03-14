@@ -7,37 +7,57 @@ This is basically updated wrapper of SwiftMailer which can be used as applicatio
 
 ~~~
 'mailer' => array(
-	'class' => 'ext.swiftMailer.SwiftMailer',
-	// For SMTP
+	'class' => 'path.to.swiftMailer.SwiftMailer',
+	
+	// Using SMTP:
 	'mailer' => 'smtp',
+	// security is optional
+	// 'ssl' for "SSL/TLS" or 'tls' for 'STARTTLS'
+	'security' => 'ssl', 
 	'host'=>'localhost',
-	'From'=>'admin@localhost',
+	'from'=>'admin@localhost',
 	'username'=>'smptusername',
 	'password'=>'123456',
-	// For sendmail:
+	
+	// Using sendmail:
 	'mailer'=>'sendmail',
+	
+	// Logging
+	// logs brief messages about message success or failhure
+	logMailerActivity => true, 
+	// logs additional info from SwiftMailer about connection details 
+	// must be used in conjunction with logMailerActivity == true
+	// check the send() method for realtime logging to console if required
+	logMailerDebug => true, 
 ),
 ~~~
 
 ##Usage
 
 ~~~
-Yii::app()->mailer->AddAddress($email);
-Yii::app()->mailer->Subject = "Let's do this!";
-Yii::app()->mailer->MsgHTML("<a href='http://site.com'>test</a>");
-Yii::app()->mailer->Send();
+Yii::app()->mailer->addAddress($email);
+Yii::app()->mailer->subject("Let's do this!");
+Yii::app()->mailer->msgHTML("<a href='http://site.com'>test</a>");
+Yii::app()->mailer->send();
+
+or
+
+Yii::app()->mailer->addAddress($email)
+	->subject("Let's do this!")
+	->msgHTML("<a href='http://site.com'>test</a>")
+	->send();
 ~~~
 
 Add file:
 ~~~
 app()->mailer
-    ->AddAddress($email)
-    ->MsgHTML('<p>You received an invoice!</p>')
-    ->AddFile($filepath)
-    ->Send();
+    ->addAddress($email){"cmd":"emailRegistration","params":{"id":"7"}}
+    ->msgHTML('<p>You received an invoice!</p>')
+    ->addFile($filepath)
+    ->send();
 ~~~
 
-Please, take a look a SwiftMailer::Send() function
+Please, take a look a SwiftMailer::send() function
 
 ##Resources
 
