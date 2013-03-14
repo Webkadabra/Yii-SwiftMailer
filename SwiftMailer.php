@@ -104,7 +104,7 @@ class SwiftMailer extends CComponent
 		return $this;
 	}
 
-	public function MsgHTML($body)
+	public function msgHTML($body)
 	{
 		$this->body = $body;
 		if ($this->altBody == null) {
