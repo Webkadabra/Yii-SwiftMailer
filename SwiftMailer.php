@@ -97,6 +97,10 @@ class SwiftMailer extends CComponent
 		$this->_subject = $subject;
 		return $this;
 	}
+	public function setSubject($subject)
+	{
+		$this->_subject = $subject;
+	}
 	public function addFile($address)
 	{
 		if (!in_array($address, $this->_attachments))
