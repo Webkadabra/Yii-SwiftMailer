@@ -197,6 +197,8 @@ class SwiftMailer extends CComponent
 
 	COMPLETE:
 		$this->clearAddresses();
+
+		return $result;
 	}
 
 	public function clearAddresses()
